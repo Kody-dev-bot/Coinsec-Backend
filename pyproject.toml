@@ -1,0 +1,24 @@
+[project]
+name = "coinsec"
+version = "0.0.1"
+description = "一句话 AI 记账"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.116.1",
+    "litellm>=1.77.1",
+    "loguru>=0.7.3",
+    "pydantic>=2.11.9",
+    "sqlmodel>=0.0.24",
+    "uvicorn[standard]>=0.35.0",
+]
+
+[tool.uv]
+index-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+]
+
+[tool.uv.scripts]
+dev = "uvicorn src.main:app --reload --host 0.0.0.0 --port 8000"
