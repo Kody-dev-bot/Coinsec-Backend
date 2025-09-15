@@ -18,7 +18,5 @@ index-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
 [dependency-groups]
 dev = [
     "black>=25.1.0",
+    "pytest>=8.4.2",
 ]
-
-[tool.uv.scripts]
-dev = "uvicorn src.main:app --reload --host 0.0.0.0 --port 8000"
