@@ -1,38 +1,59 @@
-import sys
-import os
-
-# 添加项目根目录到Python路径中
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
-
+import pytest
 from app.utils.nlp.accounting_info_parser import AccountingInfoParser
 
-if __name__ == "__main__":
-    import time
+class TestAccountingInfoParser:
+    @pytest.fixture(scope="class")
+    def parser(self):
+        """初始化AccountingInfoParser实例"""
+        return AccountingInfoParser()
     
-    # 初始化并测试
-    start_total = time.time()
-    parser = AccountingInfoParser()
-    load_time = time.time() - start_total
-    print(f"模型加载耗时: {load_time:.6f}秒\n")
+    def test_parser_initialization(self):
+        """测试解析器初始化"""
+        parser = AccountingInfoParser()
+        assert parser is not None
+        assert hasattr(parser, 'category_keywords')
+        assert hasattr(parser, 'fuzzy_amount_patterns')
+        assert hasattr(parser, 'time_period_mapping')
     
-    # 测试用例
-    test_cases = [
-        "买咖啡花了30元",
-        "昨天早上打车花了50元",
-        "10月1日下午3点吃饭花了80元",
-        "前天晚上8点看电影花了120元",
-        "今天18:30买衣服花了200元",
-        "大概花了60元买零食",
-        "今天下午打车"
-    ]
+    @pytest.mark.parametrize("text,expected_valid,expected_category", [
+        ("买咖啡花了30元", True, "餐饮"),
+        ("昨天早上打车花了50元", True, "交通"),
+        ("今天下午打车", False, "交通"),  # 缺少金额
+        ("大概花了60元买零食", False, "餐饮"),  # 模糊金额
+    ])
+    def test_parse_cases(self, parser, text, expected_valid, expected_category):
+        """测试解析器处理不同输入"""
+        valid, result = parser.parse(text)
+        assert valid == expected_valid
+        if expected_category:
+            if valid:
+                assert result["category"] == expected_category
+            else:
+                # 即使无效，也应该能识别出分类
+                assert result.get("category") == expected_category or "category" not in result
     
-    for i, case in enumerate(test_cases, 1):
-        start = time.time()
-        valid, result = parser.parse(case)
-        cost = time.time() - start
-        print(f"用例{i}: {case}")
-        print(f"有效: {valid}, 结果: {result}")
-        print(f"耗时: {cost:.6f}秒\n")
+    def test_extract_amount(self, parser):
+        """测试金额提取功能"""
+        # 精确金额
+        assert parser._extract_amount("花了30元") == 30.0
+        assert parser._extract_amount("花费100块钱") == 100.0
+        assert parser._extract_amount("支出50.5元") == 50.5
+        
+        # 模糊金额应该返回None
+        assert parser._extract_amount("大概几十块钱") is None
+        assert parser._extract_amount("大约花了100元") is None
     
-    total_cost = time.time() - start_total
-    print(f"总耗时: {total_cost:.6f}秒")
+    def test_extract_datetime(self, parser):
+        """测试日期时间提取功能"""
+        result = parser._extract_datetime("昨天早上打车花了50元")
+        assert "20" in result and "-" in result and ":" in result
+        
+        result = parser._extract_datetime("今天18:30买衣服")
+        assert ":30" in result
+    
+    def test_extract_category(self, parser):
+        """测试分类提取功能"""
+        assert parser._extract_category("买咖啡") == "餐饮"
+        assert parser._extract_category("打车去机场") == "交通"
+        assert parser._extract_category("买衣服") == "购物"
+        assert parser._extract_category("看电影") == "娱乐"
