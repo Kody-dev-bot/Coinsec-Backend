@@ -26,4 +26,5 @@ testpaths = ["tests"]
 dev = [
     "black>=25.1.0",
     "pytest>=8.4.2",
+    "python-dotenv>=1.1.1",
 ]

@@ -180,6 +180,7 @@ dependencies = [
 dev = [
     { name = "black" },
     { name = "pytest" },
+    { name = "python-dotenv" },
 ]
 
 [package.metadata]
@@ -199,6 +200,7 @@ requires-dist = [
 dev = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "pytest", specifier = ">=8.4.2" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
 
 [[package]]
