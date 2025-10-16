@@ -1,1 +1,11 @@
-spring.application.name=CoinsecBackend
+spring:
+  application:
+    name: CoinSec Service
+  profiles:
+    active: dev
+
+---
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

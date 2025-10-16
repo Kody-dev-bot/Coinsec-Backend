@@ -33,5 +33,5 @@ build/
 .vscode/
 
 .lingma/
-
-application-dev.yaml
+logs/
+.env
