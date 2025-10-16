@@ -4,8 +4,5 @@ spring:
   profiles:
     active: dev
 
----
-spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+mybatis-plus:
+  mapper-locations: classpath*:xml/*Xml.xml

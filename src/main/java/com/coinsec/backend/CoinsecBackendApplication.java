@@ -1,5 +1,7 @@
 package com.coinsec.backend;
 
+import lombok.extern.log4j.Log4j2;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -11,7 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author kody
  * @since 2025-10-16
  */
+@Log4j2
 @SpringBootApplication
+@MapperScan("com.coinsec.backend.**.mapper")
 public class CoinsecBackendApplication {
 
 	public static void main(String[] args) {
