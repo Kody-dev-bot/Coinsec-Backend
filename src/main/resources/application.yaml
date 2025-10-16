@@ -6,3 +6,11 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:xml/*Xml.xml
+
+sa-token:
+  token-name: ${TOKEN_NAME}
+  timeout: 2592000
+  active-timeout: 604800
+  is-concurrent: true
+  is-share: false
+  token-style: uuid

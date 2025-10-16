@@ -4,3 +4,13 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+decorator:
+  datasource:
+    p6spy:
+      log-format: "\ntime:%(executionTime) || sql:%(sql)\n"
+      logging: custom
+      custom-appender-class: com.p6spy.engine.spy.appender.StdoutLogger
+
+sa-token:
+  is-color-log: true
